@@ -1,5 +1,5 @@
 async function saveReviewToDB(review) {
-  const { error } = await supabase
+  const { error } = await supabaseClient
     .from('book_reviews')
     .insert([{
       book_title: review.bookTitle,
@@ -13,8 +13,8 @@ async function saveReviewToDB(review) {
     }]);
 
   if (error) {
+    alert("DB 저장 실패: " + error.message);
     console.error(error);
-    alert("DB 저장 실패");
     return false;
   }
 
@@ -22,12 +22,13 @@ async function saveReviewToDB(review) {
 }
 
 async function getReviewsFromDB() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('book_reviews')
     .select('*')
     .order('created_at', { ascending: false });
 
   if (error) {
+    alert("DB 조회 실패: " + error.message);
     console.error(error);
     return [];
   }
