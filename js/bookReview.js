@@ -125,39 +125,48 @@ async function copyCombinedText() {
 }
 
 async function publishReview() {
-  saveCurrentStep();
+  try {
+    saveCurrentStep();
 
-  if (!draft.bookTitle) {
-    alert('책 제목은 꼭 입력해줘.');
-    currentStepIndex = 0;
+    if (!draft.bookTitle) {
+      alert('책 제목은 꼭 입력해줘.');
+      currentStepIndex = 0;
+      renderStep();
+      return;
+    }
+
+    const gptSummary = document.getElementById('gptSummary').value.trim();
+
+    const review = {
+      bookTitle: draft.bookTitle,
+      author: draft.author,
+      rawText: buildCombinedText(),
+      quote: draft.quote,
+      reason: draft.reason,
+      emotion: draft.emotion,
+      action: draft.action,
+      gptSummary
+    };
+
+    alert('DB 저장 시도 중');
+
+    const success = await saveReviewToDB(review);
+
+    if (!success) {
+      alert('DB 저장 실패');
+      return;
+    }
+
+    resetDraft();
     renderStep();
-    return;
+    await renderReviews();
+
+    alert('DB 저장 완료');
+
+  } catch (error) {
+    alert('오류 발생: ' + error.message);
+    console.error(error);
   }
-
-  const gptSummary = document.getElementById('gptSummary').value.trim();
-
-  const review = {
-    bookTitle: draft.bookTitle,
-    author: draft.author,
-    rawText: buildCombinedText(),
-    quote: draft.quote,
-    reason: draft.reason,
-    emotion: draft.emotion,
-    action: draft.action,
-    gptSummary
-  };
-
-  const success = await saveReviewToDB(review);
-
-  if (!success) {
-    return;
-  }
-
-  resetDraft();
-  renderStep();
-  await renderReviews();
-
-  alert('DB 저장 완료');
 }
 
 function resetDraft() {
