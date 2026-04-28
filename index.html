@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Life Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app">
+  <header class="header">
+    <h1>📚 리뷰 작성</h1>
+    <p>단계별로 작성하고, 전체 글을 복사해 GPT에게 전달한다.</p>
+  </header>
+
+  <main class="card">
+    <div class="progress" id="progressText">1 / 6</div>
+
+    <h2 id="stepTitle">책 제목</h2>
+    <p id="stepGuide" class="guide">리뷰할 책 제목을 입력해줘.</p>
+
+    <textarea id="stepInput" placeholder="여기에 입력"></textarea>
+
+    <div class="nav-row">
+      <button class="sub-btn" onclick="prevStep()">이전</button>
+      <button class="main-btn" onclick="nextStep()">다음</button>
+    </div>
+  </main>
+
+  <section class="card preview-card">
+    <h2>GPT에게 보낼 전체 글</h2>
+    <pre id="combinedPreview" class="preview-text"></pre>
+    <button class="copy-btn" onclick="copyCombinedText()">전체 글 복사</button>
+  </section>
+
+  <section class="card">
+    <h2>GPT 정리본 붙여넣기</h2>
+    <p class="guide">ChatGPT가 정리해준 글을 여기에 붙여넣고 최종 저장한다.</p>
+    <textarea id="gptSummary" placeholder="GPT 정리본 붙여넣기"></textarea>
+    <button class="main-btn" onclick="publishReview()">최종 발행</button>
+  </section>
+
+  <section>
+    <h2 class="list-title">저장된 리뷰</h2>
+    <div id="reviewList"></div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/bookReview.js"></script>
+<script src="js/app.js"></script>
+
+
+
+</body>
+</html>
