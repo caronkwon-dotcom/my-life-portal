@@ -1,7 +1,9 @@
+import titleImage from '../assets/my-life-portal-title.svg'
+
 export default function Home({ go }) {
   return (
     <div style={{ padding: 20 }}>
-      <h1>📚 My Life Portal</h1>
+      <img className="home-title-image" src={titleImage} alt="MY LIFE PORTAL" />
 
       <button onClick={() => go('write')}>
         독서리뷰 작성

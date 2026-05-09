@@ -263,3 +263,10 @@ button:disabled {
   border-radius: 14px;
   line-height: 1.6;
 }
+
+.home-title-image {
+  width: min(100%, 620px);
+  height: auto;
+  display: block;
+  margin: 0 auto 20px;
+}
