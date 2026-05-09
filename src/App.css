@@ -213,6 +213,40 @@ button:disabled {
   box-sizing: border-box;
 }
 
+.step-textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.step-editor-container {
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.step-editor-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.step-editor-preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  background: #f3f3f3;
+  padding: 12px;
+  border-radius: 8px;
+}
+
 .toast-message {
   background: #111;
   color: white;

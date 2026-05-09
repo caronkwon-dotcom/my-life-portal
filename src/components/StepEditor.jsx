@@ -149,7 +149,7 @@ useEffect(() => {
   return (
     
     
-    <div style={{ padding: 20 }}>
+    <div className="step-editor-container">
         {message && (
       <div className="toast-message">
         {message}
@@ -165,19 +165,14 @@ useEffect(() => {
 
       <textarea
       ref={inputRef}
+        className="step-textarea"
         value={draft[step.key]}
         onChange={(e) => updateValue(e.target.value)}
         placeholder="여기에 입력"
-        style={{
-          width: '100%',
-          minHeight: 240,
-          padding: 12,
-          fontSize: 16,
-          lineHeight: 1.6
-        }}
+        style={{ minHeight: 240 }}
       />
 
-      <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+      <div className="step-editor-actions" style={{ marginTop: 12 }}>
         <button onClick={prevStep} disabled={stepIndex === 0}>
           이전
         </button>
@@ -189,12 +184,7 @@ useEffect(() => {
       <hr style={{ margin: '24px 0' }} />
 
       <h3>GPT에게 보낼 전체 글</h3>
-      <pre style={{
-        whiteSpace: 'pre-wrap',
-        background: '#f3f3f3',
-        padding: 12,
-        borderRadius: 8
-      }}>
+      <pre className="step-editor-preview">
         {buildCombinedText()}
       </pre>
 
@@ -212,17 +202,12 @@ useEffect(() => {
 
 <h3>GPT 정리본 붙여넣기</h3>
 <textarea
+  className="step-textarea"
 
   value={gptSummary}
   onChange={(e) => setGptSummary(e.target.value)}
   placeholder="ChatGPT가 정리해준 글을 여기에 붙여넣기"
-  style={{
-    width: '100%',
-    minHeight: 220,
-    padding: 12,
-    fontSize: 16,
-    lineHeight: 1.6
-  }}
+  style={{ minHeight: 220 }}
 />
 
 <button onClick={saveToDB} disabled={isSaving}>
@@ -238,8 +223,6 @@ useEffect(() => {
     
   )
 }
-
-
 
 
 
