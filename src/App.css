@@ -357,3 +357,87 @@ button:disabled {
   font-size: 28px;
   box-shadow: 0 14px 24px rgba(23, 120, 65, 0.3);
 }
+
+.fridge-title {
+  margin: 10px 0 6px;
+  font-size: 24px;
+  color: #25324d;
+}
+
+.fridge-subtitle {
+  margin: 0 0 14px;
+  color: #69728a;
+  font-size: 14px;
+}
+
+.fridge-inventory-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.fridge-item-card {
+  background: #f8f9fc;
+  border: 1px solid #eceff4;
+  border-radius: 14px;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.fridge-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fridge-item-top strong {
+  color: #1f2b45;
+  font-size: 17px;
+}
+
+.fridge-quantity {
+  color: #677089;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.fridge-item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.fridge-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.fridge-chip.refrigerator {
+  background: #e8f3ff;
+  color: #2f5f8f;
+}
+
+.fridge-chip.freezer {
+  background: #ebe8ff;
+  color: #4e4b97;
+}
+
+.fridge-chip.pantry {
+  background: #fff2df;
+  color: #906227;
+}
+
+.fridge-expiry {
+  color: #5d667d;
+  font-size: 13px;
+  font-weight: 600;
+}
