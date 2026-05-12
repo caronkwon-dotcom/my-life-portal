@@ -1,129 +1,131 @@
 import { useMemo, useState } from 'react'
 
-const initialInventory = [
-  {
-    id: 1,
-    name: '우유',
-    category: '냉장',
-    quantity: '900ml',
-    expiresAt: '2026-05-14',
-  },
-  {
-    id: 2,
-    name: '계란',
-    category: '냉장',
-    quantity: '10개',
-    expiresAt: '2026-05-18',
-  },
-  {
-    id: 3,
-    name: '브로콜리',
-    category: '냉장',
-    quantity: '1송이',
-    expiresAt: '2026-05-13',
-  },
-  {
-    id: 4,
-    name: '만두',
-    category: '냉동',
-    quantity: '1봉',
-    expiresAt: '2026-08-02',
-  },
-  {
-    id: 5,
-    name: '파스타면',
-    category: '실온',
-    quantity: '500g',
-    expiresAt: '2027-01-20',
-  },
-]
+const today = new Date().toISOString().slice(0, 10)
 
-const categoryClassMap = {
-  냉장: 'refrigerator',
-  냉동: 'freezer',
-  실온: 'pantry',
-}
+const initialInventory = [
+  { id: 1, name: '우유', remainingQty: 2, receivedAt: '2026-05-10', expiresAt: '2026-05-14', note: '저지방' },
+  { id: 2, name: '계란', remainingQty: 10, receivedAt: '2026-05-09', expiresAt: '2026-05-18', note: '대란' },
+]
 
 export default function Fridge({ onHome }) {
   const [inventory, setInventory] = useState(initialInventory)
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [form, setForm] = useState({
-    name: '',
-    category: '냉장',
-    quantity: '',
+  const [inboundForm, setInboundForm] = useState({
+    receivedAt: today,
     expiresAt: '',
+    name: '',
+    quantity: 1,
+    note: '',
   })
+  const [outboundForm, setOutboundForm] = useState({
+    shippedAt: today,
+    itemId: '',
+    quantity: 1,
+    note: '',
+  })
+
+  const selectedItem = useMemo(
+    () => inventory.find((item) => String(item.id) === outboundForm.itemId),
+    [inventory, outboundForm.itemId],
+  )
+
+  const remainingAfterOutbound = selectedItem
+    ? Math.max(0, selectedItem.remainingQty - Number(outboundForm.quantity || 0))
+    : 0
 
   const sortedInventory = useMemo(
     () => [...inventory].sort((a, b) => a.expiresAt.localeCompare(b.expiresAt)),
     [inventory],
   )
 
-  const handleChange = (event) => {
-    const { name, value } = event.target
-    setForm((prev) => ({ ...prev, [name]: value }))
+  const handleInboundChange = ({ target: { name, value } }) => {
+    setInboundForm((prev) => ({ ...prev, [name]: name === 'quantity' ? Number(value) : value }))
   }
 
-  const handleAddItem = (event) => {
-    event.preventDefault()
-    if (!form.name.trim() || !form.quantity.trim() || !form.expiresAt) return
+  const handleOutboundChange = ({ target: { name, value } }) => {
+    setOutboundForm((prev) => ({ ...prev, [name]: name === 'quantity' ? Number(value) : value }))
+  }
 
-    const item = {
+  const handleInboundSubmit = (event) => {
+    event.preventDefault()
+    if (!inboundForm.name.trim() || !inboundForm.expiresAt) return
+
+    const newItem = {
       id: Date.now(),
-      name: form.name.trim(),
-      category: form.category,
-      quantity: form.quantity.trim(),
-      expiresAt: form.expiresAt,
+      name: inboundForm.name.trim(),
+      remainingQty: Number(inboundForm.quantity) || 1,
+      receivedAt: inboundForm.receivedAt,
+      expiresAt: inboundForm.expiresAt,
+      note: inboundForm.note.trim(),
     }
-    setInventory((prev) => [...prev, item])
-    setForm({ name: '', category: '냉장', quantity: '', expiresAt: '' })
-    setIsFormOpen(false)
+    setInventory((prev) => [...prev, newItem])
+    setInboundForm({ receivedAt: today, expiresAt: '', name: '', quantity: 1, note: '' })
+  }
+
+  const handleOutboundSubmit = (event) => {
+    event.preventDefault()
+    if (!selectedItem) return
+
+    setInventory((prev) => prev.map((item) => {
+      if (item.id !== selectedItem.id) return item
+      return {
+        ...item,
+        remainingQty: Math.max(0, item.remainingQty - (Number(outboundForm.quantity) || 0)),
+        note: outboundForm.note.trim() ? `${item.note} | 출고메모: ${outboundForm.note.trim()}` : item.note,
+      }
+    }))
+
+    setOutboundForm({ shippedAt: today, itemId: '', quantity: 1, note: '' })
   }
 
   return (
     <div className="portal-shell">
       <section className="portal-card fridge-screen">
         <p className="placeholder-badge fridge-badge">냉장고 재고</p>
-        <h1 className="fridge-title">재고 목록</h1>
-        <p className="fridge-subtitle">현재 등록된 식재료를 확인해보세요.</p>
+        <h1 className="fridge-title">입출고 관리</h1>
 
-        {isFormOpen && (
-          <form className="fridge-form" onSubmit={handleAddItem}>
-            <input name="name" placeholder="식재료명" value={form.name} onChange={handleChange} />
-            <select name="category" value={form.category} onChange={handleChange}>
-              <option value="냉장">냉장</option>
-              <option value="냉동">냉동</option>
-              <option value="실온">실온</option>
-            </select>
-            <input name="quantity" placeholder="수량 (예: 1봉)" value={form.quantity} onChange={handleChange} />
-            <input name="expiresAt" type="date" value={form.expiresAt} onChange={handleChange} />
-            <button type="submit" className="btn-primary">식재료 추가</button>
-          </form>
-        )}
+        <form className="fridge-form" onSubmit={handleInboundSubmit}>
+          <h2>입고 등록</h2>
+          <input type="date" name="receivedAt" value={inboundForm.receivedAt} onChange={handleInboundChange} />
+          <input type="date" name="expiresAt" value={inboundForm.expiresAt} onChange={handleInboundChange} />
+          <input name="name" placeholder="품목명" value={inboundForm.name} onChange={handleInboundChange} />
+          <input type="number" min="1" name="quantity" value={inboundForm.quantity} onChange={handleInboundChange} />
+          <input name="note" placeholder="메모" value={inboundForm.note} onChange={handleInboundChange} />
+          <button type="submit" className="btn-primary">입고 저장</button>
+        </form>
+
+        <form className="fridge-form" onSubmit={handleOutboundSubmit}>
+          <h2>출고 등록</h2>
+          <input type="date" name="shippedAt" value={outboundForm.shippedAt} onChange={handleOutboundChange} />
+          <select name="itemId" value={outboundForm.itemId} onChange={handleOutboundChange}>
+            <option value="">기존 품목 선택</option>
+            {inventory.map((item) => (
+              <option key={item.id} value={item.id}>{item.name}</option>
+            ))}
+          </select>
+          <input type="number" min="1" name="quantity" value={outboundForm.quantity} onChange={handleOutboundChange} />
+          <p className="fridge-subtitle">남은 수량: {remainingAfterOutbound}</p>
+          <input name="note" placeholder="메모" value={outboundForm.note} onChange={handleOutboundChange} />
+          <button type="submit" className="btn-secondary">출고 저장</button>
+        </form>
 
         <ul className="fridge-inventory-list" aria-label="냉장고 재고 목록">
           {sortedInventory.map((item) => (
-            <li key={item.id} className="fridge-item-card">
+            <li key={item.id} className={`fridge-item-card ${item.remainingQty === 0 ? 'is-empty' : ''}`}>
               <div className="fridge-item-top">
                 <strong>{item.name}</strong>
-                <span className="fridge-quantity">{item.quantity}</span>
+                <span className="fridge-quantity">남은 수량 {item.remainingQty}</span>
               </div>
               <div className="fridge-item-meta">
-                <span className={`fridge-chip ${categoryClassMap[item.category]}`}>
-                  {item.category}
-                </span>
-                <span className="fridge-expiry">소비기한 {item.expiresAt}</span>
+                <span className="fridge-expiry">입고일 {item.receivedAt}</span>
+                <span className="fridge-expiry">유통기한 {item.expiresAt}</span>
               </div>
+              <p className="fridge-note">메모: {item.note || '-'}</p>
             </li>
           ))}
         </ul>
 
-        <button type="button" className="btn-secondary" onClick={onHome}>
-          홈으로 돌아가기
-        </button>
+        <button type="button" className="btn-secondary" onClick={onHome}>홈으로 돌아가기</button>
       </section>
-
-      <button type="button" className="fab" aria-label="식재료 추가" onClick={() => setIsFormOpen((prev) => !prev)}>＋</button>
     </div>
   )
 }

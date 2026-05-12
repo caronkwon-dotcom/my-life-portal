@@ -385,6 +385,12 @@ button:disabled {
   background: #fff;
 }
 
+.fridge-form h2 {
+  margin: 2px 0;
+  font-size: 16px;
+  color: #2b3a57;
+}
+
 .fridge-inventory-list {
   margin: 0;
   padding: 0;
@@ -400,6 +406,11 @@ button:disabled {
   padding: 12px;
   display: grid;
   gap: 10px;
+}
+
+.fridge-item-card.is-empty {
+  opacity: 0.55;
+  border-style: dashed;
 }
 
 .fridge-item-top {
@@ -455,4 +466,10 @@ button:disabled {
   color: #5d667d;
   font-size: 13px;
   font-weight: 600;
+}
+
+.fridge-note {
+  margin: 0;
+  color: #56607a;
+  font-size: 13px;
 }
