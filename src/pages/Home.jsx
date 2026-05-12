@@ -19,7 +19,7 @@ export default function Home({ go, recentReviews = [] }) {
       </header>
 
       <section className="portal-card">
-        <h2>오늘의 요약</h2>
+        <h2>Today's Summary</h2>
         <div className="summary-grid">
           {summaryItems.map((item) => (
             <div key={item} className="summary-item">{item}</div>

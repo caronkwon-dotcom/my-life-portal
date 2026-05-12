@@ -370,6 +370,21 @@ button:disabled {
   font-size: 14px;
 }
 
+.fridge-form {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.fridge-form input,
+.fridge-form select {
+  border: 1px solid #d9deea;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #fff;
+}
+
 .fridge-inventory-list {
   margin: 0;
   padding: 0;
