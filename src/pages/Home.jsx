@@ -16,6 +16,7 @@ export default function Home({ go, recentReviews = [] }) {
       <header className="portal-header portal-card">
         <h1>My Life Portal</h1>
         <p>나의 생활 기록을 한 곳에서 관리합니다.</p>
+        <p>Fridge App Coming Soon</p>
       </header>
 
       <section className="portal-card">
